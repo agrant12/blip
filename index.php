@@ -5,11 +5,25 @@
 </head>
 <body>
 	<?php 
-		include './vendor/autoload.php';
-		FacebookSession::setDefaultApplication('369808103183839', '42874825214206b4c6e56ef7a2dbb669'); 
-		$helper = new FacebookRedirectLoginHelper('your redirect URL here');
-		$loginUrl = $helper->getLoginUrl();
+
+		try {
+			require_once 'service/prize.php';
+			$prize = new Prize();
+			$message = $prize->get_prize();
+		} catch (Exception $e) {
+			echo 'There was an error. Please try again.';
+		}
+
 	?>
+
+	<?php if ($message != 'Sorry you are not a winner'): ?>
+		<p>Congratulations! You have won a <?php echo $message; ?>!</p>
+		<form action="service/process.php">
+			<button>Redeem Prize</button>
+		</form>
+	<?php else: ?>
+		<p><?php echo $message; ?></p>
+	<?php endif; ?>
 	
 	<!--<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 	</fb:login-button> -->

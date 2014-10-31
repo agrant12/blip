@@ -1,24 +1,40 @@
 <?php
-/* Process Submission */
+	session_start();
 
-include 'controller.php';
-include 'model.php';
+	require_once('../vendor/facebook/php-sdk-v4/autoload.php');
 
-class Process {
+	use Facebook\FacebookSession;
+	use Facebook\FacebookRedirectLoginHelper;
+	use Facebook\FacebookRequest;
+	use Facebook\FacebookResponse;
+	use Facebook\FacebookSDKException;
+	use Facebook\FacebookRequestException;
+	use Facebook\FacebookAuthorizationException;
+	use Facebook\GraphObject;
 
-}
-$model = new Model();
-$controller = new Controller($model);
+	FacebookSession::setDefaultApplication('369940546503928', 'b49acd0336126391576c2ef22bed29cc');
 
-// Possible Prizes
-static $prizes = array(
-	0 => 'Sorry you are not a winner',
-	1 => 'T-Shirt',
-	2 => 'Cap',
-	3 => 'Music Download'
-);
+	$helper = new FacebookRedirectLoginHelper('http://alvin.blip.com/service/login.php');
 
-echo $controller->get_prize($prizes);
+	try {
+		$session = $helper->getSessionFromRedirect();
+	} catch (FacebookRequestException $e) {
+		echo $e;
+	} catch (Execption $ex) {
+		echo $ex;
+	}
 
+	if ( isset( $session ) ) {
+		// graph api request for user data
+		$request = new FacebookRequest( $session, 'GET', '/me' );
+		$response = $request->execute();
+		// get response
+		$graphObject = $response->getGraphObject();
 
+		// print data
+		echo  print_r( $graphObject, 1 );
+	} else {
+		// show login url
+		echo '<a href="' . $helper->getLoginUrl() . '">Login</a>';
+	}
 ?>
