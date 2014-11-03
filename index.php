@@ -1,17 +1,13 @@
 <!DOCTYPE HTML>
 <head>
 	<title>Blippar Contest</title>
-	<script type="text/javascript" src="service/js/facebook.js"></script>
+	<!--<script type="text/javascript" src="service/js/facebook.js"></script>-->
 </head>
 <body>
 
-	<fb:logout-button scope="public_profile" onlogin="getLoginState();">
-	</fb:logout-button>
-
 	<?php 
-
-		//$access_token = $_COOKIE["accessToken"];
-		//require_once 'service/includes/facebook.php';
+		//$accessToken = $_COOKIE['accessToken'];
+		//require_once 'service/facebook.php';
 
 		try {
 			require_once 'service/prize.php';
