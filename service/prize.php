@@ -17,7 +17,7 @@ class Prize {
 		);
 
 		$prizes_id = array(
-			'Sorry you are not a winner' => 0,
+			'Sorry you are not a winner.' => 0,
 			'T-Shirt' => 1,
 			'Cap' => 2,
 			'Music Download' => 3

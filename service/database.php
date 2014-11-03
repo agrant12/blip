@@ -13,12 +13,12 @@ if ($conn->connect_error) {
 }
 
 $sql = "INSERT INTO user (prize_id, prize)
-VALUES ($prize_id, $prize)";
+VALUES ($prize_id, '$POST[prize]')";
 
 if ($conn->query($sql) === TRUE) {
-	echo 'Success';
+	
 } else {
-	echo 'Fail';
+	echo $conn->error;
 }
 
 $conn->close;

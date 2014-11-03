@@ -38,14 +38,23 @@ fbAsyncInit = function() {
 	});
 	FB.getLoginStatus(function(response) {
 		if (response.status === 'connected') {
-			console.log('Logged in.');
+			var accessToken = response.authResponse.accessToken;
+			document.cookie = 'accessToken=' + accessToken;
 		}
 		else {
 			FB.login();
 		}
 	});
-};
+	FB.login(function(){
+		FB.api('/me', 
+			function (response) {
+				console.log(response);
+			});
+		});
+	};
 
+
+// Facebook JS SDK
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
 	if (d.getElementById(id)) {return;}
