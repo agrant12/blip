@@ -1,47 +1,46 @@
 <?php
+	$ch = curl_init();
 
-	/* EDIT EMAIL AND PASSWORD */
-	$EMAIL = "";
-	$PASSWORD = "";
+	$postData = array(
+		'client_id' => '369940546503928',
+		'client_secret' => 'b49acd0336126391576c2ef22bed29cc',
+		'grant_type' => 'client_credentials',
+		'redirect_to' => 'http://alvingrant.com',
+		'testcookie' => '1'
+	);
+ 
+	curl_setopt_array($ch, array(
+		CURLOPT_URL => 'https://graph.facebook.com/oauth/access_token?',
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POST => 1,
+		CURLOPT_POSTFIELDS => $postData,
+		CURLOPT_USERAGENT => $_SERVER['HTTP_USER_AGENT'],
+		CURLOPT_FOLLOWLOCATION => true
+	));
 
-	function cURL($url, $header=NULL, $cookie=NULL, $p=NULL) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_HEADER, $header);
-		curl_setopt($ch, CURLOPT_NOBODY, $header);
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_COOKIE, $cookie);
-		curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	$access_token = preg_split("/[=]+/", curl_exec($ch));
+	$access_token = $access_token[1];
+	echo $access_token;
 
-		if ($p) {
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $p);
-			}
-			$result = curl_exec($ch);
+	$getData = array(
+		'fields' => 'about',
+		'access_token' => $access_token
+	);
 
-			if ($result) {
-				return $result;
-			} else {
-				return curl_error($ch);
-			}
-			curl_close($ch);
-		}
+	$me = curl_init();
 
-		$a = cURL("https://login.facebook.com/login.php?login_attempt=1",true,null,"email=$EMAIL&pass=$PASSWORD");
-		preg_match('%Set-Cookie: ([^;]+);%',$a,$b);
-		$c = cURL("https://login.facebook.com/login.php?login_attempt=1",true,$b[1],"email=$EMAIL&pass=$PASSWORD");
-		preg_match_all('%Set-Cookie: ([^;]+);%',$c,$d);
-		for($i=0;$i<count($d[0]);$i++)
-		$cookie.=$d[1][$i].";";
+	curl_setopt_array($me, array(
+		CURLOPT_URL => 'https://graph.facebook.com/me?',
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POST => 1,
+		CURLOPT_POSTFIELDS => $getData,
+		CURLOPT_USERAGENT => $_SERVER['HTTP_USER_AGENT'],
+		CURLOPT_FOLLOWLOCATION => true
+	));
+	//var_dump($me);
+	echo curl_exec($me);
 
-		/*
-		NOW TO JUST OPEN ANOTHER URL EDIT THE FIRST ARGUMENT OF THE FOLLOWING FUNCTION.
-		TO SEND SOME DATA EDIT THE LAST ARGUMENT.
-		*/
-		echo cURL("http://www.facebook.com/",null,$cookie,null);
-		//echo cURL("alvin.blip.com");
+	//close curl
+	curl_close($ch);
+	
 ?>

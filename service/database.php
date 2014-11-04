@@ -12,8 +12,8 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "INSERT INTO user (prize_id, prize)
-VALUES ($prize_id, '$POST[prize]')";
+$sql = "INSERT INTO user (prize_id, prize, session)
+VALUES ($prize_id, '$POST[prize]', '$_COOKIE[PHPSESSID]')";
 
 if ($conn->query($sql) === TRUE) {
 	

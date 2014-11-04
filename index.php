@@ -7,7 +7,9 @@
 
 	<?php 
 		//$accessToken = $_COOKIE['accessToken'];
-		//require_once 'service/facebook.php';
+		require_once 'service/facebook.php';
+
+		$session = $_COOKIE['PHPSESSID'];
 
 		try {
 			require_once 'service/prize.php';
