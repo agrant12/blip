@@ -1,9 +1,14 @@
-<!DOCTYPE HTML>
-<head>
-	<title>Blippar Contest</title>
-	<!--<script type="text/javascript" src="service/js/facebook.js"></script>-->
-</head>
+<?php 
+	include 'includes/header.php';
+	session_start();
+?>
+
 <body>
+	<section>
+		<h4>Welcome to my contest!</h4>
+		<p>Click button to enter.</p>
+		<button>Enter Contest</button>
+	</section>
 
 	<?php 
 		//$accessToken = $_COOKIE['accessToken'];
@@ -37,4 +42,5 @@
 	<?php endif; ?>
 
 </body>
-</html>
+
+<?php include 'includes/footer.php'; ?>
