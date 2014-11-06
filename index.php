@@ -1,21 +1,17 @@
 <?php 
-	include 'includes/header.php';
-	session_start();
+	session_start(); 
+	require_once 'config.php';
+	require_once 'service/facebook_login.php';
 ?>
 
-<body>
-	<section>
-		<h4>Welcome to my contest!</h4>
-		<p>Click button to enter.</p>
-		<button>Enter Contest</button>
-	</section>
+<!DOCTYPE HTML>
+<head>
+	<title>Blippar Contest</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
 
+<?php if ($user_id && $user_name): ?>
 	<?php 
-		//$accessToken = $_COOKIE['accessToken'];
-		require_once 'service/facebook.php';
-
-		$session = $_COOKIE['PHPSESSID'];
-
 		try {
 			require_once 'service/prize.php';
 			$prize = new Prize();
@@ -27,20 +23,30 @@
 
 	<?php if ($message['id'] != 0): ?>
 		<p>Congratulations! You have won a <?php echo $message['prize']; ?>!</p>
+		<p>View All Winners: <button>Winners</button></p>
 		<?php
 			$POST['prize'] = $message['prize'];
 			$prize_id = $message['id'];
+
+			//Insert Data
 			require_once 'service/database.php';
+			$database = new Database();
+			$database->insert();
 		?>
 	<?php else: ?>
 		<p><?php echo $message['prize']; ?> Please try again tommorrow.</p>
 		<?php
 			$POST['prize'] = $message['prize'];
 			$prize_id = $message['id'];
+			
+			//Insert Data
 			require_once 'service/database.php';
+			$database = new Database();
+			$database->insert();
 		?>
 	<?php endif; ?>
+<?php else: ?>
+	<p>Please login in to win: <a href="<?php echo func();?>">Login</a></p>
+<?php endif; ?>
 
-</body>
 
-<?php include 'includes/footer.php'; ?>
