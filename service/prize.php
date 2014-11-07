@@ -5,9 +5,9 @@ class Prize {
 
 	public function __construct() {}
 
-	public function get_prize() {
+	public function get_prize($name) {
 		$winner = array();
-		
+
 		// Possible Prizes
 		$prizes = array(
 			0 => 'Sorry you are not a winner.',
@@ -17,20 +17,34 @@ class Prize {
 		);
 
 		$prizes_id = array(
-			'Sorry you are not a winner.' => 0,
-			'T-Shirt' => 1,
-			'Cap' => 2,
-			'Music Download' => 3
+			'Sorry you are not a winner.' => '0',
+			'T-Shirt' => '1',
+			'Cap' => '2',
+			'Music Download' => '3'
 		);
 
 		shuffle($prizes);
 
 		foreach ($prizes as $key => $prize) {}
 
-		$winner['id'] = $prizes_id[$prize];
-		$winner['prize'] = $prize;
+		$winners = '<?xml version="1.0" encoding="UTF-8"?>' .
+					'<winner>' .
+						'<prize>' . $prize . '</prize>' .
+						'<prize_id>' . $prizes_id[$prize] . '</prize_id>' .
+						'<name>' . $name . '</name>' .
+					'</winner>';
 
-		return $winner;
+		if ($prizes_id[$prize] != 0) {
+			$html = 'Congratulation ' . $name . '! You have won a ' . $prize . '.';
+			$html .= '<form action="process.php">' .
+						'<input type="submit" name="submit" value="Redeem" />' .
+					'</form>';
+			echo $html;
+		} else {
+			echo $prize;
+		}
+
+		return simplexml_load_string($winners);
 	}
 }
 

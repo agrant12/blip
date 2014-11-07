@@ -1,52 +1,51 @@
 <?php 
-	session_start(); 
-	require_once 'config.php';
-	require_once 'service/facebook_login.php';
+	//Start Session
+	session_start();
+
+	//Include variables for app
+	require_once 'config.php'; 
 ?>
 
-<!DOCTYPE HTML>
-<head>
-	<title>Blippar Contest</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-
-<?php if ($user_id && $user_name): ?>
+<?php if (!empty($_REQUEST['code'])): ?>
 	<?php 
-		try {
-			require_once 'service/prize.php';
+		require_once 'service/facebook_token.php';
+		require_once 'service/database.php';
+
+		//Set variables using session to be inserted into database
+		$name = htmlentities($_SESSION['name']);
+		$facebook_id = htmlentities($_SESSION['facebook_id']);
+		$prize = htmlentities($_SESSION['prize']);
+		$prize_id = htmlentities($_SESSION['prize_id']);
+
+		//Create Database Object and insert data
+		$database = new Database($servername, $username, $password, $dbname);
+		$database->insert($prize, $prize_id, $facebook_id, $name);
+	?>
+<?php elseif ( isset($_GET['submit'])): ?>
+	<?php 
+		//Set Global Request
+		$_SESSION['name'] = $_GET['name'];
+
+		require_once 'service/prize.php';
+
+		//Retrieve Prize
+		if ($_SESSION['name']) {
+			$name = htmlentities($_SESSION['name']);
 			$prize = new Prize();
-			$message = $prize->get_prize();
-		} catch (Exception $e) {
-			echo 'There was an error. Please try again.';
+			$message = $prize->get_prize($name);
+
+			$_SESSION['prize'] = (string)$message->prize;
+			$_SESSION['prize_id'] = (string)$message->prize_id;
+			$_SESSION['name'] = (string)$message->name;
 		}
 	?>
-
-	<?php if ($message['id'] != 0): ?>
-		<p>Congratulations! You have won a <?php echo $message['prize']; ?>!</p>
-		<p>View All Winners: <button>Winners</button></p>
-		<?php
-			$POST['prize'] = $message['prize'];
-			$prize_id = $message['id'];
-
-			//Insert Data
-			require_once 'service/database.php';
-			$database = new Database();
-			$database->insert();
-		?>
-	<?php else: ?>
-		<p><?php echo $message['prize']; ?> Please try again tommorrow.</p>
-		<?php
-			$POST['prize'] = $message['prize'];
-			$prize_id = $message['id'];
-			
-			//Insert Data
-			require_once 'service/database.php';
-			$database = new Database();
-			$database->insert();
-		?>
-	<?php endif; ?>
 <?php else: ?>
-	<p>Please login in to win: <a href="<?php echo func();?>">Login</a></p>
+	<form action="" method="get">
+		<labels>Name:</label><input type="text" name="name" required="required" />
+		<input type="submit" name="submit" value="send"></input>
+	</form>
 <?php endif; ?>
+
+
 
 

@@ -1,10 +1,20 @@
 <?php 
-//Variables used to connect to Facebook application
 
+//Facebook Application Variable
 $app_id = '369940546503928';
 $app_secret = 'b49acd0336126391576c2ef22bed29cc';
 $my_url = 'http://alvin.blip.com/';
 
+//Database Variables
+$servername = "127.0.0.1";
+$username = "root";
+$password = "";
+$dbname = "blip";
 
+require_once 'service/database.php';
+
+//Check if database exists
+$database = new Database($servername, $username, $password, $dbname);
+$database->create_db();
 
 ?>
