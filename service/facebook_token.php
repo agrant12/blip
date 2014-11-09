@@ -1,4 +1,8 @@
 <?php
+	/**
+	* Retrieve User token to get user data
+	*/
+
 	//Initiate Curl Requests
 	$ch = curl_init();
 	$user = curl_init();
@@ -7,7 +11,7 @@
 		'client_id' => $app_id,
 		'redirect_uri' => $my_url,
 		'client_secret' => $app_secret,
-		'code' => $_GET['code']
+		'code' => $_REQUEST['code']
 	);
 
 	//Get User Access Token
@@ -22,7 +26,7 @@
 
 	$access_token = preg_split("/[=&]+/", curl_exec($ch));
 	$access_token = $access_token[1];
-
+	
 	//Get User Info
 	$getData = array(
 		'access_token' => $access_token
@@ -35,7 +39,6 @@
 	));
 
 	$winner = json_decode(curl_exec($user));
-
 	$facebook_id = $winner->id;
 
 	// Close connections

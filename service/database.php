@@ -1,4 +1,8 @@
 <?php
+/**
+* Database Class
+* Insert, Read, Create
+*/
 
 class Database {
 
