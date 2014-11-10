@@ -14,9 +14,14 @@ $username = "root";
 $password = "";
 $dbname = "blip";
 
-require_once 'service/database.php';
 
-//Check if database exists
+//Time Zone
+$timezone = date_default_timezone_set('America/New_York');
+require_once 'service/time.php';
+$time = new Time($timezone);
+
+//Check if database exists, then create if not
+require_once 'service/database.php';
 $database = new Database($servername, $username, $password, $dbname);
 $database->create_db();
 

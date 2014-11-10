@@ -35,7 +35,8 @@ class Prize {
 					'</winner>';
 
 		if ($prizes_id[$prize] != 0) {
-			$html = 'Congratulation ' . $name . '! You have won a ' . $prize . '.';
+			$html = 'Congratulations ' . $name . '! You have won a ' . $prize . '.';
+			$html .= 'Redeem your prize by logging into Facebook.';
 			$html .= '<form action="process.php">' .
 						'<input type="submit" name="submit" value="Redeem" />' .
 					'</form>';

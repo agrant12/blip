@@ -11,7 +11,7 @@ class Database {
 	private $password;
 	private $dbname;
 
-	public function __construct($servername = '', $username = '', $password = '', $dbname = ''){
+	public function __construct($servername = '', $username = '', $password = '', $dbname = '') {
 		$this->servername = $servername;
 		$this->username = $username;
 		$this->password = $password;
@@ -21,7 +21,7 @@ class Database {
 	/**
 	* Insert data into user table
 	*/
-	public function insert($prize, $prize_id, $facebook_id, $name) {
+	public function insert($prize, $prize_id, $facebook_id, $name, $DateOfRequest) {
 		$html = '';
 
 		//Check that values are present
@@ -47,8 +47,8 @@ class Database {
 				}
 			}
 		} else {
-			$sql = "INSERT INTO user (prize, prize_id, facebook_id, name)
-			VALUES ('$prize', '$prize_id', '$facebook_id', '$name')";
+			$sql = "INSERT INTO user (prize, prize_id, facebook_id, name, entry_time)
+			VALUES ('$prize', '$prize_id', '$facebook_id', '$name', '$DateOfRequest')";
 
 			if ($conn->query($sql) === TRUE) {
 
@@ -121,13 +121,14 @@ class Database {
 		$conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 
 		$table = "CREATE TABLE `user` (
-			`id` int(255) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-			`prize` varchar(255) NOT NULL,
-			`prize_id` varchar(255) NOT NULL,
-			`facebook_id` varchar(255) NOT NULL,
-			`entry_time` datetime DEFAULT NULL,
-			`name` varchar(255) NOT NULL
-			)";
+				`id` int(255) NOT NULL AUTO_INCREMENT,
+				`prize` varchar(255) NOT NULL,
+				`prize_id` varchar(255) NOT NULL,
+				`facebook_id` varchar(255) NOT NULL,
+				`entry_time` varchar(255) NOT NULL DEFAULT '',
+				`name` varchar(255) NOT NULL,
+				PRIMARY KEY (`id`)
+				) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;";
 		
 		if ($conn->query($table) === TRUE) {
 
@@ -137,6 +138,22 @@ class Database {
 
 		//Close connection
 		$conn->close();
+	}
+
+	public function download() {
+		$conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+
+		// output headers so that the file is downloaded rather than displayed
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment; filename=data.csv');
+
+		// create a file pointer connected to the output stream
+		$output = fopen('php://output', 'w');
+
+		// output the column headings
+		fputcsv($output, array('Name', 'Prize', 'Prize ID', 'Facebook ID'));
+
+		$rows = mysql_query('SELECT name,prize,prize_id,facebook_id FROM user');
 	}
 }
 

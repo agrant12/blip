@@ -15,10 +15,13 @@
 			$name = htmlentities($_SESSION['name']);
 			$prize = htmlentities($_SESSION['prize']);
 			$prize_id = htmlentities($_SESSION['prize_id']);
-
+			
+			// Get Time 
+			$date = new DateTime();
+			$DateOfRequest = (string)$date->format('Y-m-d H:i:s');
 			//Create Database Object and insert data
 			$database = new Database($servername, $username, $password, $dbname);
-			$database->insert($prize, $prize_id, $facebook_id, $name);
+			$database->insert($prize, $prize_id, $facebook_id, $name, $DateOfRequest);
 
 			$html = 'View winners: ';
 			$html .= '<a href="secure.php">Winners</a>';
